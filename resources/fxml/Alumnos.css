@@ -1,1 +1,16 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.notaFin {
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+.notaPEC {
+    -fx-alignment: CENTER;
+}
+
+.corrige {
+    -fx-alignment: center-left;
+}

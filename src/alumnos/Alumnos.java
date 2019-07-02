@@ -14,7 +14,7 @@ public class Alumnos extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-	        Boolean test = false;
+	        Boolean test = true;
 	        Boolean ok = true;
 	        getAlumnosData d = null;
 	        
@@ -35,18 +35,15 @@ public class Alumnos extends Application {
 	        }
 	        
 	        if (ok) {
-	            Alert alert = new Alert(Alert.AlertType.INFORMATION, "login correcto");
-	            alert.showAndWait();
-
-/*	            FXMLLoader fxml = new FXMLLoader(getClass().getResource("FXMLalumnos.fxml"));
+	            FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLalumnos.fxml"));
 	            Parent root = (Parent) fxml.load();
 	            FXMLalumnosController alumnos = fxml.<FXMLalumnosController>getController();
 	            alumnos.SetData(d);
 
 	            Scene scene = new Scene(root);
-	            stage.setTitle("Alumnos cursos Stata");
-	            stage.setScene(scene);
-	            stage.show();*/
+	            primaryStage.setTitle("Alumnos cursos Stata");
+	            primaryStage.setScene(scene);
+	            primaryStage.show();
 	        }
 		} catch(Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
