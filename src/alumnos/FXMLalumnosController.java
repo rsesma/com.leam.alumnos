@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import alumnos.model.Alumno;
 import alumnos.model.getAlumnosData;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,6 +64,10 @@ public class FXMLalumnosController implements Initializable {
     @FXML
     TableColumn<Alumno, String> comentCol;
     @FXML
+    TableColumn<Alumno, Boolean> copiaCol;
+    @FXML
+    TableColumn<Alumno, String> idCopiaCol;    
+    @FXML
     Label ntotal;
     @FXML
     TextField search;
@@ -112,6 +115,7 @@ public class FXMLalumnosController implements Initializable {
         this.PCCol.setCellValueFactory(new PropertyValueFactory<>("PC"));
         this.comentCol.setCellValueFactory(new PropertyValueFactory<>("Coment"));
         this.claseCol.setCellValueFactory(new PropertyValueFactory<>("Clase"));
+        this.idCopiaCol.setCellValueFactory(new PropertyValueFactory<>("IDCopia"));
         
         // checkbox Fijo
         this.fijoCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Alumno, Boolean>, ObservableValue<Boolean>>() {
@@ -123,6 +127,23 @@ public class FXMLalumnosController implements Initializable {
             }
         });
         this.fijoCol.setCellFactory(new Callback<TableColumn<Alumno, Boolean>, TableCell<Alumno, Boolean>>() {
+            public TableCell<Alumno, Boolean> call(TableColumn<Alumno, Boolean> p) {
+                CheckBoxTableCell<Alumno, Boolean> cell = new CheckBoxTableCell<Alumno, Boolean>();
+                cell.setAlignment(Pos.CENTER);
+                return cell;
+            }
+        });
+        
+        // checkbox Copia
+        this.copiaCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Alumno, Boolean>, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Alumno, Boolean> param) {
+                Alumno a = param.getValue();
+                SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(a.getCopia());
+                return booleanProp;
+            }
+        });
+        this.copiaCol.setCellFactory(new Callback<TableColumn<Alumno, Boolean>, TableCell<Alumno, Boolean>>() {
             public TableCell<Alumno, Boolean> call(TableColumn<Alumno, Boolean> p) {
                 CheckBoxTableCell<Alumno, Boolean> cell = new CheckBoxTableCell<Alumno, Boolean>();
                 cell.setAlignment(Pos.CENTER);
@@ -559,11 +580,13 @@ public class FXMLalumnosController implements Initializable {
                 a.setPC(rs.getString("PC"));
                 a.setFijo(rs.getBoolean("Fijo"));
                 a.setName(rs.getString("nom"));
-                a.setClase(rs.getString("CLASE"));
+                a.setClase(rs.getString("NCLASE"));
                 a.setPEC1(rs.getString("PEC1"));
                 a.setPEC(rs.getString("PEC"));
                 a.setNOTA(rs.getString("NOTA"));
-                a.setComent(rs.getString("Comentario"));
+                a.setCopia(rs.getBoolean("Copia"));
+                a.setIDCopia(rs.getString("IDCopia"));
+                a.setComent(rs.getString("coment"));
                 
                 this.data.add(a);
                 
