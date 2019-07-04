@@ -5,10 +5,16 @@
  */
 package alumnos;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import alumnos.model.Alumno;
 import alumnos.model.getAlumnosData;
@@ -22,15 +28,18 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -156,7 +165,7 @@ public class FXMLalumnosController implements Initializable {
     
     @FXML
     public void pbSearch(ActionEvent event) {
-/*        String filter = "";
+        String filter = "";
         if (!this.search.getText().trim().isEmpty()) {
             filter = "Periodo = '".concat(this.search.getText()).concat("'");
             filter = filter.concat("OR Grupo = '").concat(this.search.getText()).concat("'");
@@ -164,19 +173,19 @@ public class FXMLalumnosController implements Initializable {
             filter = filter.concat("OR nom LIKE '%").concat(this.search.getText()).concat("%'");
             this.data.removeAll(this.data);
             LoadAlumnosTable(filter);
-        }*/
+        }
     }
 
     @FXML
     public void pbClean(ActionEvent event) {
-/*        this.data.removeAll(this.data);
+        this.data.removeAll(this.data);
         this.search.setText("");
-        LoadAlumnosTable("");*/
+        LoadAlumnosTable("");
     }
 
     @FXML
     public void mnuImportar(ActionEvent event) {
-/*        FileChooser chooser = new FileChooser();
+        FileChooser chooser = new FileChooser();
         chooser.setTitle("Abrir archivo de datos");
         chooser.setInitialDirectory(new File(System.getProperty("user.home"))); 
         File file = chooser.showOpenDialog(null);
@@ -189,20 +198,19 @@ public class FXMLalumnosController implements Initializable {
             if (periodo.isPresent()){
                 try {
                     FileInputStream input = new FileInputStream(file.getAbsolutePath());
-                    HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(input));
-                    HSSFSheet sheet = wb.getSheetAt(0);
-                    org.apache.poi.ss.usermodel.Row row;
+                    XSSFWorkbook wb = new XSSFWorkbook(input);
+                    XSSFSheet sheet = wb.getSheetAt(0);
                     for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-                        row = sheet.getRow(i);
-                        this.d.importExcelRow(row, periodo.get());
+                        this.d.importExcelRow(sheet.getRow(i), periodo.get());
                     }
+                    wb.close();
                     input.close();
                     
                     String filter = "";
-                    Alert alert = new Alert(AlertType.CONFIRMATION);
-                    alert.setTitle("ImportaciÃ³n finalizada");
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Importación finalizada");
                     alert.setHeaderText(null);
-                    alert.setContentText("ImportaciÃ³n finalizada.\nÂ¿Visualizar el periodo?");
+                    alert.setContentText("Importación finalizada.\n¿Visualizar el periodo?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) filter = "Periodo = '" + periodo.get() + "'";
                     
@@ -213,7 +221,7 @@ public class FXMLalumnosController implements Initializable {
                     alert.showAndWait();
                 }
             }
-        }*/
+        }
     }
         
     @FXML
