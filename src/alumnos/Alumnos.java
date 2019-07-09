@@ -35,15 +35,15 @@ public class Alumnos extends Application {
 	        }
 	        
 	        if (ok) {
-	            FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLalumnos.fxml"));
+	        	FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLinit.fxml"));
 	            Parent root = (Parent) fxml.load();
-	            FXMLalumnosController alumnos = fxml.<FXMLalumnosController>getController();
-	            alumnos.SetData(d);
+	            FXMLinitController init = fxml.<FXMLinitController>getController();
+	            init.SetData(d);
 
 	            Scene scene = new Scene(root);
-	            primaryStage.setTitle("Alumnos cursos Stata");
+	            primaryStage.setTitle("Cursos");
 	            primaryStage.setScene(scene);
-	            primaryStage.show();
+	            primaryStage.show();	            
 	        }
 		} catch(Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());

@@ -14,54 +14,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="645.0" prefWidth="1200.0" stylesheets="@Alumnos.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alumnos.FXMLalumnosController">
    <children>
-      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="1200.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="Archivo">
-            <items>
-                  <MenuItem mnemonicParsing="false" onAction="#mnuImportar" text="Importar">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-              <MenuItem mnemonicParsing="false" onAction="#closeWindow" text="Cerrar">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Corregir">
-            <items>
-                  <MenuItem mnemonicParsing="false" onAction="#mnuCorregir" text="Corregir">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#mnuCorregirPEC1" text="Corregir PEC1" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#mnuEntregaPEC" text="Entrega PEC" />
-                  <MenuItem mnemonicParsing="false" onAction="#mnuProblemasPEC" text="Problemas PEC" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#mnuDescomprimirPEC1" text="Descomprimir PEC1" />
-                  <MenuItem mnemonicParsing="false" onAction="#mnuEntregaPEC1" text="Entrega PEC1" />
-                  <MenuItem mnemonicParsing="false" onAction="#mnuProblemasPEC1" text="Problemas PEC1" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#mnuSintaxis" text="Obtener Sintaxis">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#mnuExport" text="Exportar datos">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <TableView fx:id="table" layoutY="26.0" prefHeight="574.0" prefWidth="1200.0" stylesheets="@Alumnos.css">
+      <TableView fx:id="table" layoutY="-2.0" prefHeight="602.0" prefWidth="1200.0" stylesheets="@Alumnos.css">
         <columns>
             <TableColumn fx:id="periodoCol" editable="false" prefWidth="65.0" sortable="false" text="Periodo" />
             <TableColumn fx:id="cursoCol" editable="false" prefWidth="46.0" sortable="false" text="Curso" />
