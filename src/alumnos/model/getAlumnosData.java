@@ -19,7 +19,7 @@ public class getAlumnosData {
     public getAlumnosData(Boolean load) {
     	getAlumnosData.setConn(null);
     	
-    	if (load) getConnection("rsesma","Amsesr.1977","192.168.1.10");
+    	if (load) getConnection("rsesma","Amsesr.1977","localhost");
     }
     
     public Boolean getConnection(String user, String pswd, String server) {
@@ -54,6 +54,24 @@ public class getAlumnosData {
         }
         else {
             return conn.prepareStatement("SELECT * FROM nota_fin").executeQuery();            
+        }
+    }
+    
+    public ResultSet getProblemasPEC(String filter) throws SQLException {
+        if (filter.length()>0) {
+            return conn.prepareStatement("SELECT * FROM problemaspec WHERE " + filter).executeQuery();
+        }
+        else {
+            return conn.prepareStatement("SELECT * FROM problemaspec").executeQuery();            
+        }
+    }
+
+    public ResultSet getProblemasPEC1(String filter) throws SQLException {
+        if (filter.length()>0) {
+            return conn.prepareStatement("SELECT * FROM problemaspec1 WHERE " + filter).executeQuery();
+        }
+        else {
+            return conn.prepareStatement("SELECT * FROM problemaspec1").executeQuery();            
         }
     }
 
@@ -91,5 +109,44 @@ public class getAlumnosData {
             alert.showAndWait();
         }
     }
+    
+    public void entregaPEC(String dni, String curso, String periodo, Boolean honor) {
+        try {
+            PreparedStatement q;
+            q = conn.prepareStatement("INSERT INTO entregahonor (DNI, Curso, Periodo, entregada, honor) VALUES(?, ?, ?, ?, ?)");
+            q.setString(1, dni);
+            q.setString(2, curso);
+            q.setString(3, periodo);
+            q.setBoolean(4, true);
+            q.setBoolean(5, honor);
+            q.executeUpdate();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+            alert.showAndWait();
+        }
+    }
+    
+    public void updateEntregaPEC(Problema p, boolean pec1) {
+        try {
+            PreparedStatement q;
+            if (pec1) {
+                q = conn.prepareStatement("UPDATE entregahonorpec1 SET mdb = ?, pdf = ?, honor = ? WHERE DNI = ?");
+                q.setBoolean(1,p.getMDB());
+                q.setBoolean(2,p.getPDF());
+                q.setBoolean(3,p.getHonor());
+                q.setString(4,p.getDNI());                
+            } else {
+                q = conn.prepareStatement("UPDATE entregahonor SET honor = ? WHERE DNI = ? AND CURSO = ?");
+                q.setBoolean(1,p.getHonor());
+                q.setString(2,p.getDNI());
+                q.setString(3,p.getGrupo().substring(0,3));
+            }
+            q.executeUpdate();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 
 }

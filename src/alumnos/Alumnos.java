@@ -35,13 +35,13 @@ public class Alumnos extends Application {
 	        }
 	        
 	        if (ok) {
-	        	FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLinit.fxml"));
+	        	FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLalumnos.fxml"));
 	            Parent root = (Parent) fxml.load();
-	            FXMLinitController init = fxml.<FXMLinitController>getController();
-	            init.SetData(d);
+	            FXMLalumnosController alumnos = fxml.<FXMLalumnosController>getController();
+	            alumnos.SetData(d,"");
 
 	            Scene scene = new Scene(root);
-	            primaryStage.setTitle("Cursos");
+	            primaryStage.setTitle("Alumnos");
 	            primaryStage.setScene(scene);
 	            primaryStage.show();	            
 	        }

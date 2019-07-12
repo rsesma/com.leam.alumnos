@@ -14,7 +14,56 @@
 
 <AnchorPane id="AnchorPane" prefHeight="645.0" prefWidth="1200.0" stylesheets="@Alumnos.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alumnos.FXMLalumnosController">
    <children>
-      <TableView fx:id="table" layoutY="-2.0" prefHeight="602.0" prefWidth="1200.0" stylesheets="@Alumnos.css">
+      <MenuBar layoutY="-1.0" prefHeight="33.0" prefWidth="182.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="Archivo">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#mnuImportar" text="Importar">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#closeWindow" text="Cerrar">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Corregir">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#mnuCorregir" text="Corregir">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#mnuCorregirPEC1" text="Corregir PEC1" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuEntregaPEC" text="Entrega PEC" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuProblemasPEC" text="Problemas PEC" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuDescomprimirPEC1" text="Descomprimir PEC1" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuEntregaPEC1" text="Entrega PEC1" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuProblemasPEC1" text="Problemas PEC1" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuSintaxis" text="Obtener Sintaxis">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnuExport" text="Exportar datos">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <TextField fx:id="folder" layoutX="833.0" layoutY="3.0" prefHeight="27.0" prefWidth="332.0" promptText="Carpeta CorrigePECs" />
+      <Button fx:id="btFolder" layoutX="1172.0" layoutY="3.0" mnemonicParsing="false" onAction="#pbFolder" prefHeight="27.0" prefWidth="11.0" text="..." />
+      <TableView fx:id="table" layoutY="31.0" prefHeight="569.0" prefWidth="1200.0" stylesheets="@Alumnos.css">
         <columns>
             <TableColumn fx:id="periodoCol" editable="false" prefWidth="65.0" sortable="false" text="Periodo" />
             <TableColumn fx:id="cursoCol" editable="false" prefWidth="46.0" sortable="false" text="Curso" />
@@ -32,9 +81,13 @@
             <TableColumn fx:id="comentCol" editable="false" prefWidth="264.0" sortable="false" text="Comentarios" />
         </columns>
       </TableView>
-      <Label fx:id="ntotal" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="1049.0" layoutY="607.0" prefHeight="17.0" prefWidth="137.0" text="Label" textAlignment="RIGHT" />
       <TextField fx:id="search" layoutX="3.0" layoutY="607.0" prefHeight="27.0" prefWidth="299.0" promptText="Buscar" />
       <Button fx:id="btSearch" defaultButton="true" layoutX="311.0" layoutY="608.0" mnemonicParsing="false" onAction="#pbSearch" prefHeight="25.0" prefWidth="25.0" textAlignment="CENTER"> </Button>
       <Button fx:id="btClean" layoutX="346.0" layoutY="608.0" mnemonicParsing="false" onAction="#pbClean" prefHeight="25.0" prefWidth="25.0"> </Button>
+      <ProgressBar fx:id="pb" layoutX="385.0" layoutY="612.0" prefWidth="200.0" progress="0.0" />
+      <Label fx:id="ntotal" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="1038.0" layoutY="607.0" prefHeight="17.0" prefWidth="148.0" text="Label" textAlignment="RIGHT" />
+      <Label fx:id="pbLabel" layoutX="600.0" layoutY="612.0" prefHeight="17.0" prefWidth="182.0" text="Label" />
+      <Label layoutX="622.0" layoutY="8.0" text="Periodo:" />
+      <TextField fx:id="periodo" layoutX="677.0" layoutY="3.0" promptText="Periodo" />
    </children>
 </AnchorPane>
