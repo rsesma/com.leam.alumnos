@@ -110,36 +110,22 @@ public class getAlumnosData {
         }
     }
     
-    public void entregaPEC(String dni, String curso, String periodo, Boolean honor) {
+    public void entregaPEC(EntPEC p) {
         try {
+        	String sql = "INSERT INTO entregahonor (DNI, Curso, Periodo, npec, entregada, honor" +
+        			(p.isMultiple() ? ", mdb, pdf" : "") +
+        			") VALUES(?, ?, ?, ?, ?, ?" +
+        			(p.isMultiple() ? ", ?, ?) " : ") ");
             PreparedStatement q;
-            q = conn.prepareStatement("INSERT INTO entregahonor (DNI, Curso, Periodo, entregada, honor) VALUES(?, ?, ?, ?, ?)");
-            q.setString(1, dni);
-            q.setString(2, curso);
-            q.setString(3, periodo);
-            q.setBoolean(4, true);
-            q.setBoolean(5, honor);
-            q.executeUpdate();
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-            alert.showAndWait();
-        }
-    }
-    
-    public void updateEntregaPEC(Problema p, boolean pec1) {
-        try {
-            PreparedStatement q;
-            if (pec1) {
-                q = conn.prepareStatement("UPDATE entregahonorpec1 SET mdb = ?, pdf = ?, honor = ? WHERE DNI = ?");
-                q.setBoolean(1,p.getMDB());
-                q.setBoolean(2,p.getPDF());
-                q.setBoolean(3,p.getHonor());
-                q.setString(4,p.getDNI());                
-            } else {
-                q = conn.prepareStatement("UPDATE entregahonor SET honor = ? WHERE DNI = ? AND CURSO = ?");
-                q.setBoolean(1,p.getHonor());
-                q.setString(2,p.getDNI());
-                q.setString(3,p.getGrupo().substring(0,3));
+            q = conn.prepareStatement(sql);
+            q.setString(1, p.getDNI());
+            q.setString(2, p.getCurso());
+            q.setString(3, p.getPeriodo());
+            q.setInt(4, p.getNPEC());
+            q.setBoolean(5, true);
+            q.setBoolean(6, p.getHonor());
+            if (p.isMultiple()) {
+            	// load extra fields
             }
             q.executeUpdate();
         } catch (Exception e) {
@@ -147,6 +133,24 @@ public class getAlumnosData {
             alert.showAndWait();
         }
     }
-
-
+    
+    public void updateEntregaPEC(EntPEC p) {
+        try {
+        	String sql = "UPDATE entregahonor SET honor = ?, mdb = ?, pdf = ? " + 
+        			" WHERE DNI = ? AND Curso = ? AND Periodo = ? AND npec = ?";
+            PreparedStatement q;
+            q = conn.prepareStatement(sql);
+            q.setBoolean(1, p.getHonor());
+            q.setBoolean(2, (p.isMultiple() ? p.getMDB() : null));
+            q.setBoolean(3, (p.isMultiple() ? p.getPDF() : null));
+            q.setString(4, p.getDNI());
+            q.setString(5, p.getCurso());
+            q.setString(6, p.getPeriodo());
+            q.setInt(7, p.getNPEC());
+            q.executeUpdate();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+            alert.showAndWait();
+        }
+    }
 }

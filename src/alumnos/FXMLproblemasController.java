@@ -5,14 +5,15 @@
  */
 package alumnos;
 
-import alumnos.model.Problema;
-import alumnos.model.getAlumnosData;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import alumnos.model.EntPEC;
+import alumnos.model.getAlumnosData;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,8 +31,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 /**
@@ -42,21 +41,27 @@ import javafx.util.Callback;
 public class FXMLproblemasController implements Initializable {
 
     @FXML
-    TableView<Problema> table;
+    TableView<EntPEC> table;
     @FXML
-    private TableColumn<Problema,String> grupoCol;
+    private TableColumn<EntPEC,String> periodoCol;
     @FXML
-    private TableColumn<Problema,String> dniCol;
+    private TableColumn<EntPEC,String> cursoCol;
     @FXML
-    private TableColumn<Problema,String> nombreCol;
+    private TableColumn<EntPEC,String> grupoCol;
     @FXML
-    private TableColumn<Problema,Boolean> mdbCol;
+    private TableColumn<EntPEC,Integer> npecCol;
     @FXML
-    private TableColumn<Problema,Boolean> pdfCol;
+    private TableColumn<EntPEC,String> dniCol;
     @FXML
-    private TableColumn<Problema,Boolean> honorCol;
+    private TableColumn<EntPEC,String> nombreCol;
     @FXML
-    private TableColumn<Problema,String> emailCol;
+    private TableColumn<EntPEC,Boolean> honorCol;
+    @FXML
+    private TableColumn<EntPEC,Boolean> mdbCol;
+    @FXML
+    private TableColumn<EntPEC,Boolean> pdfCol;
+    @FXML
+    private TableColumn<EntPEC,String> emailCol;
     @FXML
     TextField search;
     @FXML
@@ -64,41 +69,33 @@ public class FXMLproblemasController implements Initializable {
     @FXML
     Button btClean;
 
-    final ObservableList<Problema> data = FXCollections.observableArrayList();
+    final ObservableList<EntPEC> data = FXCollections.observableArrayList();
     
     getAlumnosData d;
-    boolean pec1;
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-    	ImageView imgSearch = new ImageView(new Image(getClass().getResourceAsStream("/fxml/search.png")));
-		imgSearch.setFitWidth(15);
-		imgSearch.setFitHeight(15);
-        this.btSearch.setGraphic(imgSearch);
-	        
-		ImageView imgClean = new ImageView(new Image(getClass().getResourceAsStream("/fxml/no_filter.png")));
-		imgClean.setFitWidth(15);
-		imgClean.setFitHeight(15);
-        this.btClean.setGraphic(imgClean);
-
+    	
         this.table.setItems(this.data);
         this.table.setEditable(true);
         
         // Set up the alumnos table
+        this.periodoCol.setCellValueFactory(new PropertyValueFactory<>("Periodo"));
+        this.cursoCol.setCellValueFactory(new PropertyValueFactory<>("Curso"));
         this.grupoCol.setCellValueFactory(new PropertyValueFactory<>("Grupo"));
-        this.nombreCol.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
+        this.npecCol.setCellValueFactory(new PropertyValueFactory<>("NPEC"));
         this.dniCol.setCellValueFactory(new PropertyValueFactory<>("DNI"));
+        this.nombreCol.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
         this.emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
 
-        // checkbox MDB
-        this.mdbCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Problema, Boolean>, ObservableValue<Boolean>>() {
+        // checkbox Extra
+        this.mdbCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<EntPEC, Boolean>, ObservableValue<Boolean>>() {
             @Override
-            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Problema, Boolean> param) {
-                Problema p = param.getValue();
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<EntPEC, Boolean> param) {
+                EntPEC p = param.getValue();
                 SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(p.getMDB());
                 // when column change
                 booleanProp.addListener(new ChangeListener<Boolean>() {
@@ -112,20 +109,20 @@ public class FXMLproblemasController implements Initializable {
                 return booleanProp;
             }
         });
-        this.mdbCol.setCellFactory(new Callback<TableColumn<Problema, Boolean>, TableCell<Problema, Boolean>>() {
+        this.mdbCol.setCellFactory(new Callback<TableColumn<EntPEC, Boolean>, TableCell<EntPEC, Boolean>>() {
             @Override
-            public TableCell<Problema, Boolean> call(TableColumn<Problema, Boolean> p) {
-                CheckBoxTableCell<Problema, Boolean> cell = new CheckBoxTableCell<Problema, Boolean>();
+            public TableCell<EntPEC, Boolean> call(TableColumn<EntPEC, Boolean> p) {
+                CheckBoxTableCell<EntPEC, Boolean> cell = new CheckBoxTableCell<EntPEC, Boolean>();
                 cell.setAlignment(Pos.CENTER);
                 return cell;
             }
         });
         
         // checkbox PDF
-        this.pdfCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Problema, Boolean>, ObservableValue<Boolean>>() {
+        this.pdfCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<EntPEC, Boolean>, ObservableValue<Boolean>>() {
             @Override
-            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Problema, Boolean> param) {
-                Problema p = param.getValue();
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<EntPEC, Boolean> param) {
+                EntPEC p = param.getValue();
                 SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(p.getPDF());
                 // when column change
                 booleanProp.addListener(new ChangeListener<Boolean>() {
@@ -139,20 +136,20 @@ public class FXMLproblemasController implements Initializable {
                 return booleanProp;
             }
         });
-        this.pdfCol.setCellFactory(new Callback<TableColumn<Problema, Boolean>, TableCell<Problema, Boolean>>() {
+        this.pdfCol.setCellFactory(new Callback<TableColumn<EntPEC, Boolean>, TableCell<EntPEC, Boolean>>() {
             @Override
-            public TableCell<Problema, Boolean> call(TableColumn<Problema, Boolean> p) {
-                CheckBoxTableCell<Problema, Boolean> cell = new CheckBoxTableCell<Problema, Boolean>();
+            public TableCell<EntPEC, Boolean> call(TableColumn<EntPEC, Boolean> p) {
+                CheckBoxTableCell<EntPEC, Boolean> cell = new CheckBoxTableCell<EntPEC, Boolean>();
                 cell.setAlignment(Pos.CENTER);
                 return cell;
             }
         });
 
-        // checkbox MDB
-        this.honorCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Problema, Boolean>, ObservableValue<Boolean>>() {
+        // checkbox HONOR
+        this.honorCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<EntPEC, Boolean>, ObservableValue<Boolean>>() {
             @Override
-            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Problema, Boolean> param) {
-                Problema p = param.getValue();
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<EntPEC, Boolean> param) {
+                EntPEC p = param.getValue();
                 SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(p.getHonor());
                 // when column change
                 booleanProp.addListener(new ChangeListener<Boolean>() {
@@ -166,10 +163,10 @@ public class FXMLproblemasController implements Initializable {
                 return booleanProp;
             }
         });
-        this.honorCol.setCellFactory(new Callback<TableColumn<Problema, Boolean>, TableCell<Problema, Boolean>>() {
+        this.honorCol.setCellFactory(new Callback<TableColumn<EntPEC, Boolean>, TableCell<EntPEC, Boolean>>() {
             @Override
-            public TableCell<Problema, Boolean> call(TableColumn<Problema, Boolean> p) {
-                CheckBoxTableCell<Problema, Boolean> cell = new CheckBoxTableCell<Problema, Boolean>();
+            public TableCell<EntPEC, Boolean> call(TableColumn<EntPEC, Boolean> p) {
+                CheckBoxTableCell<EntPEC, Boolean> cell = new CheckBoxTableCell<EntPEC, Boolean>();
                 cell.setAlignment(Pos.CENTER);
                 return cell;
             }
@@ -181,6 +178,7 @@ public class FXMLproblemasController implements Initializable {
         String filter = "";
         if (!this.search.getText().trim().isEmpty()) {
             filter = "Periodo = '".concat(this.search.getText()).concat("'");
+            filter = filter.concat("OR Curso = '").concat(this.search.getText()).concat("'");
             filter = filter.concat("OR Grupo = '").concat(this.search.getText()).concat("'");
             filter = filter.concat("OR DNI LIKE '%").concat(this.search.getText()).concat("%'");
             filter = filter.concat("OR nom LIKE '%").concat(this.search.getText()).concat("%'");
@@ -211,40 +209,37 @@ public class FXMLproblemasController implements Initializable {
     @FXML
     public void pbGrabar(ActionEvent event) {
         this.data.forEach((p) -> { 
-            if (p.getChanged()) this.d.updateEntregaPEC(p,this.pec1);
+            if (p.getChanged()) this.d.updateEntregaPEC(p);
         });
+        this.data.removeAll(this.data);
         LoadProblemasTable("");
     }
     
-    public void SetData(getAlumnosData d, boolean pec1) {
+    public void SetData(getAlumnosData d) {
         this.d = d;
-        this.pec1 = pec1;
-        if (!this.pec1) {
-            this.mdbCol.setVisible(false);
-            this.pdfCol.setVisible(false);
-        }
         LoadProblemasTable("");
     }
     
     public void LoadProblemasTable(String filter) {
         try{
-            ResultSet rs;
-            if (this.pec1) rs = this.d.getProblemasPEC1(filter);
-            else rs = this.d.getProblemasPEC(filter);
+            ResultSet rs = this.d.getProblemasPEC(filter);
             while(rs.next()){
-                Problema p = new Problema();
+                EntPEC p = new EntPEC();
+                p.setPeriodo(rs.getString("Periodo"));
+                p.setCurso(rs.getString("Curso"));
                 p.setGrupo(rs.getString("Grupo"));
+                p.setNPEC(rs.getInt("npec"));
                 p.setDNI(rs.getString("DNI"));
                 p.setNombre(rs.getString("nom"));
-                if (this.pec1) {
-                    p.setMDB(rs.getBoolean("mdb"));
-                    p.setPDF(rs.getBoolean("pdf"));
-                } else {
-                    p.setMDB(false);
-                    p.setPDF(false);
-                }
                 p.setHonor(rs.getBoolean("honor"));
                 p.setEmail(rs.getString("email"));
+                if (p.isMultiple()) {
+	                p.setMDB(rs.getBoolean("mdb"));
+	                p.setPDF(rs.getBoolean("pdf"));
+                } else {
+	                p.setMDB(false);
+	                p.setPDF(false);                	
+                }
                 
                 this.data.add(p);
             }

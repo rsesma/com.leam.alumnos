@@ -9,9 +9,12 @@ package alumnos.model;
  *
  * @author R
  */
-public class Problema {
-    private String grupo;
+public class EntPEC {
+	private String curso;
+	private String periodo;
+	private String grupo;
     private String dni;
+    private int npec;
     private Boolean mdb;
     private Boolean pdf;
     private Boolean honor;
@@ -19,8 +22,34 @@ public class Problema {
     private String email;
     private Boolean changed;
     
-    public Problema() {
+    public EntPEC() {
         this.changed = false;
+        this.mdb = null;
+        this.pdf = null;
+    }
+    
+    public String getCurso() {
+        return this.curso;
+    }
+
+    public void setCurso(String c) {
+        this.curso = c;
+    }
+    
+    public String getPeriodo() {
+        return this.periodo;
+    }
+
+    public void setPeriodo(String c) {
+        this.periodo = c;
+    }
+    
+    public int getNPEC() {
+        return this.npec;
+    }
+
+    public void setNPEC(int n) {
+        this.npec = n;
     }
     
     public String getGrupo() {
@@ -30,7 +59,7 @@ public class Problema {
     public void setGrupo(String c) {
         this.grupo = c;
     }
-    
+        
     public String getDNI() {
         return this.dni;
     }
@@ -85,5 +114,10 @@ public class Problema {
 
     public void setChanged(Boolean l) {
         this.changed = l;
+    }
+
+    public Boolean isMultiple() {
+        if (this.curso.equals("ST1") && this.npec==1) return true;
+        else return false;
     }
 }

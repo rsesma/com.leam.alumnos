@@ -8,12 +8,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 
-public class ImportTask extends Task<Integer> {
+public class TaskImport extends Task<Integer> {
 	private final getAlumnosData d;
 	private final String periodo;
 	private final String file;
 
-    public ImportTask(getAlumnosData d, String periodo, String file) {
+    public TaskImport(getAlumnosData d, String periodo, String file) {
         this.d = d;
         this.periodo = periodo;
         this.file = file;
