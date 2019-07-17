@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 
 import alumnos.model.Alumno;
 import alumnos.model.TaskEntrega;
+import alumnos.model.TaskExtract;
 import alumnos.model.TaskImport;
 import alumnos.model.getAlumnosData;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -104,7 +105,8 @@ public class FXMLalumnosController implements Initializable {
     
     final ObservableList<Alumno> data = FXCollections.observableArrayList();
     private static final String CORREGIRPECS = "/CorregirPECs/";
-    private static final String ST1_PEC1_originales = "/ST1/PEC1/originales";
+    private static final String ST1_PEC1_comprimidas = "/ST1/PEC1/comprimidas";
+    private static final String ST1_PEC1_descomprimidas = "/ST1/PEC1/descomprimidas";
     private static final String ST1_PEC2_originales = "/ST1/PEC2/originales";
     private static final String ST2_originales = "/ST2/originales";
 
@@ -120,6 +122,7 @@ public class FXMLalumnosController implements Initializable {
     private static final String CURSO = "Curso:";
     private static final String REVISANDO_ENTREGA = "Revisando entrega...";
     private static final String ENCONTRARON_PROBLEMAS = "Se encontraron problemas:";
+    private static final String EXTRAYENDO_PECS = "Extrayendo PECs...";
     
     private final File home = new File(System.getProperty("user.home"));
     
@@ -243,7 +246,7 @@ public class FXMLalumnosController implements Initializable {
     @FXML
     void mnuEntregaPEC(ActionEvent event) {
     	
-    	if (checkCarpetaPeriodo()) {
+    	if (checkCarpetaPeriodo(true)) {
     		Optional<String> tipo = getTipoPEC();
         	if (tipo.isPresent()){
         		TaskEntrega entregaTask = new TaskEntrega(this.d, 
@@ -310,6 +313,36 @@ public class FXMLalumnosController implements Initializable {
 
     @FXML
     void mnuDescomprimirPEC(ActionEvent event) {
+    	if (checkCarpetaPeriodo(false)) {
+    		Optional<String> tipo = getTipoPEC();
+        	if (tipo.isPresent()){
+        		TaskExtract extractTask = new TaskExtract(getFolderFromTipo(tipo), getExtractFolderFromTipo(tipo));
+            		
+	            this.pb.progressProperty().unbind();
+	            this.pb.progressProperty().bind(extractTask.progressProperty());
+	            this.pb.setVisible(true);
+	            this.pbLabel.setVisible(true);
+	            this.pbLabel.setText(EXTRAYENDO_PECS);
+
+	            // When completed tasks
+	            extractTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, //
+	            		new EventHandler<WorkerStateEvent>() { 
+	            	@Override
+                    public void handle(WorkerStateEvent t) {
+	    	        	pb.setVisible(false);
+	    	            pbLabel.setVisible(false);
+	    	            pbLabel.setText("");
+	    	            
+	    	            Alert alert = new Alert(AlertType.INFORMATION);
+	                    alert.setHeaderText(PROCESO_FINALIZADO);
+	                    alert.setContentText(null);
+		                alert.showAndWait();
+	            	}
+	            });
+	            
+	            new Thread(extractTask).start();
+        	}
+    	}
     }
 
     @FXML
@@ -392,7 +425,7 @@ public class FXMLalumnosController implements Initializable {
         this.ntotal.setText(count + " registros");
     }
     
-    public Boolean checkCarpetaPeriodo() {
+    public Boolean checkCarpetaPeriodo(Boolean checkPeriodo) {
     	Boolean ok = false;
     	String error = "";
     	
@@ -405,8 +438,12 @@ public class FXMLalumnosController implements Initializable {
     		if (!def.exists()) {
     			error = CARPETA_NO_EXISTE;		// default dir exists
     		} else {
-    			if (p.isEmpty()){
-    				error = INDIQUE_PERIODO;	// periodo exists
+    			if (checkPeriodo) {
+	    			if (p.isEmpty()){
+	    				error = INDIQUE_PERIODO;	// periodo exists
+	    			} else {
+	    				ok = true;
+	    			}
     			} else {
     				ok = true;
     			}
@@ -442,7 +479,7 @@ public class FXMLalumnosController implements Initializable {
     	File folder = null;
     	File def = new File(this.home,CORREGIRPECS);
     	if (tipo.get().equals("ST1 - PEC1")) {
-    		folder = new File(def, ST1_PEC1_originales);
+    		folder = new File(def, ST1_PEC1_comprimidas);
     	} else if (tipo.get().equals("ST1 - PEC2")) {
     		folder = new File(def, ST1_PEC2_originales);
     	} else if (tipo.get().equals("ST2")) {
@@ -451,7 +488,17 @@ public class FXMLalumnosController implements Initializable {
     	
     	return folder;
     }
-    
+
+    public File getExtractFolderFromTipo(Optional<String> tipo) {
+    	File folder = null;
+    	File def = new File(this.home,CORREGIRPECS);
+    	if (tipo.get().equals("ST1 - PEC1")) {
+    		folder = new File(def, ST1_PEC1_descomprimidas);
+    	}
+    	
+    	return folder;
+    }
+
     @FXML
     private void closeWindow() {
         Stage stage = (Stage) this.search.getScene().getWindow();
