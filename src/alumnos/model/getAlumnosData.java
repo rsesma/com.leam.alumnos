@@ -125,7 +125,9 @@ public class getAlumnosData {
             q.setBoolean(5, true);
             q.setBoolean(6, p.getHonor());
             if (p.isMultiple()) {
-            	// load extra fields
+            	// load extra fields: MDB & PDF
+            	q.setBoolean(7, p.getMDB());
+            	q.setBoolean(8, p.getPDF());
             }
             q.executeUpdate();
         } catch (Exception e) {

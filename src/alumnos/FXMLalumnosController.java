@@ -1,20 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package alumnos;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import alumnos.model.Alumno;
+import alumnos.model.Pregunta;
 import alumnos.model.TaskEntrega;
 import alumnos.model.TaskExtract;
 import alumnos.model.TaskImport;
@@ -242,6 +243,31 @@ public class FXMLalumnosController implements Initializable {
     void mnuCorregirPEC1(ActionEvent event) {
 
     }
+    
+    @FXML
+    void mnuEstructuraPEC(ActionEvent event) {
+	    List<String> lines = Collections.emptyList();
+	    try { 
+	    	lines = Files.readAllLines(Paths.get("C:/Users/rsesm/Desktop/2019.07_PEC2_ST1_sol.txt"), StandardCharsets.UTF_8); 
+	    } catch (Exception e) { 
+	    	e.printStackTrace(); 
+	    } 
+	    Iterator<String> itr = lines.iterator();
+	    boolean first = true;
+	    while (itr.hasNext()) { 
+	    	if (!first) {
+	    		Pregunta p = new Pregunta();
+	    		String[] tokens = itr.next().split(",");
+	    		p.setPregunta(tokens[1].replace("'","").replace("P",""));
+	    		p.setTipo(Integer.parseInt(tokens[2]));
+	    		p.setW(Float.parseFloat(tokens[4]));
+	    		if (!tokens[5].equals("null")) p.setNumopc(Integer.parseInt(tokens[5]));
+	    	} else {
+	    		itr.next();
+	    		first = false;
+	    	}
+	    } 
+    }
 
     @FXML
     void mnuEntregaPEC(ActionEvent event) {
@@ -251,7 +277,7 @@ public class FXMLalumnosController implements Initializable {
         	if (tipo.isPresent()){
         		TaskEntrega entregaTask = new TaskEntrega(this.d, 
         			this.periodo.getText(), 
-    				tipo.get(), getFolderFromTipo(tipo));
+    				tipo.get(), getFolderFromTipo(tipo,true));
         		
 	            this.pb.progressProperty().unbind();
 	            this.pb.progressProperty().bind(entregaTask.progressProperty());
@@ -316,7 +342,7 @@ public class FXMLalumnosController implements Initializable {
     	if (checkCarpetaPeriodo(false)) {
     		Optional<String> tipo = getTipoPEC();
         	if (tipo.isPresent()){
-        		TaskExtract extractTask = new TaskExtract(getFolderFromTipo(tipo), getExtractFolderFromTipo(tipo));
+        		TaskExtract extractTask = new TaskExtract(getFolderFromTipo(tipo,false), getExtractFolderFromTipo(tipo));
             		
 	            this.pb.progressProperty().unbind();
 	            this.pb.progressProperty().bind(extractTask.progressProperty());
@@ -475,11 +501,12 @@ public class FXMLalumnosController implements Initializable {
     	return dlg.showAndWait();
     }
     
-    public File getFolderFromTipo(Optional<String> tipo) {
+    public File getFolderFromTipo(Optional<String> tipo, boolean entrega) {
     	File folder = null;
     	File def = new File(this.home,CORREGIRPECS);
     	if (tipo.get().equals("ST1 - PEC1")) {
-    		folder = new File(def, ST1_PEC1_comprimidas);
+    		if (entrega) folder = new File(def, ST1_PEC1_descomprimidas);
+    		else folder = new File(def, ST1_PEC1_comprimidas);
     	} else if (tipo.get().equals("ST1 - PEC2")) {
     		folder = new File(def, ST1_PEC2_originales);
     	} else if (tipo.get().equals("ST2")) {
