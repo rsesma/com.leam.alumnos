@@ -114,7 +114,7 @@ public class FXMLalumnosController implements Initializable {
     private static final String ABRIR_ARCHIVO = "Abrir archivo de datos";
     private static final String IMPORTANDO_DATOS = "Importando datos...";
     private static final String PROCESO_FINALIZADO = "Proceso finalizado";
-    private static final String IMPORTACION_FINALIZADA = "Importación finalizada.\n¿Visualizar el periodo?";
+    private static final String IMPORTACION_FINALIZADA = "Importaciï¿½n finalizada.\nï¿½Visualizar el periodo?";
     private static final String ENTREGA_PECS = "Entrega PECs";
     private static final String INDIQUE_CARPETA = "Indique una carpeta CorregirPECs";
     private static final String CARPETA_NO_EXISTE = "La carpeta CorregirPECs indicada no existe";
@@ -247,8 +247,9 @@ public class FXMLalumnosController implements Initializable {
     @FXML
     void mnuEstructuraPEC(ActionEvent event) {
 	    List<String> lines = Collections.emptyList();
+	    File txt = new File(new File(this.home,"Desktop"),"2019.07_PEC2_ST1_sol.txt");
 	    try { 
-	    	lines = Files.readAllLines(Paths.get("C:/Users/rsesm/Desktop/2019.07_PEC2_ST1_sol.txt"), StandardCharsets.UTF_8); 
+	    	lines = Files.readAllLines(Paths.get(txt.getAbsolutePath()),StandardCharsets.UTF_8); 
 	    } catch (Exception e) { 
 	    	e.printStackTrace(); 
 	    } 
@@ -262,6 +263,7 @@ public class FXMLalumnosController implements Initializable {
 	    		p.setTipo(Integer.parseInt(tokens[2]));
 	    		p.setW(Float.parseFloat(tokens[4]));
 	    		if (!tokens[5].equals("null")) p.setNumopc(Integer.parseInt(tokens[5]));
+	    		System.out.println(String.join("; ", tokens));
 	    	} else {
 	    		itr.next();
 	    		first = false;
