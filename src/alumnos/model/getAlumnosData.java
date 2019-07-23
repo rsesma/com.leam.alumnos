@@ -48,33 +48,13 @@ public class getAlumnosData {
 		getAlumnosData.conn = conn;
 	}
 
-    public ResultSet getAlumnosRs(String filter) throws SQLException {
-        if (filter.length()>0) {
-            return conn.prepareStatement("SELECT * FROM nota_fin WHERE " + filter).executeQuery();
-        }
-        else {
-            return conn.prepareStatement("SELECT * FROM nota_fin").executeQuery();            
-        }
+    public ResultSet getRS(String fields, String table, String filter, String order) throws SQLException {
+    	String sql = "SELECT " + fields + " FROM " + table;
+    	if (filter.length()>0) sql = sql + " WHERE " + filter;
+    	if (order.length()>0) sql = sql + " ORDER BY " + order;
+    	return conn.prepareStatement(sql).executeQuery();
     }
     
-    public ResultSet getProblemasPEC(String filter) throws SQLException {
-        if (filter.length()>0) {
-            return conn.prepareStatement("SELECT * FROM problemaspec WHERE " + filter).executeQuery();
-        }
-        else {
-            return conn.prepareStatement("SELECT * FROM problemaspec").executeQuery();            
-        }
-    }
-
-    public ResultSet getProblemasPEC1(String filter) throws SQLException {
-        if (filter.length()>0) {
-            return conn.prepareStatement("SELECT * FROM problemaspec1 WHERE " + filter).executeQuery();
-        }
-        else {
-            return conn.prepareStatement("SELECT * FROM problemaspec1").executeQuery();            
-        }
-    }
-
     public void importExcelRow(org.apache.poi.ss.usermodel.Row row, String periodo) {
         try {
         	Cell c = row.getCell(5);		// check PC value to discard rows with no PC

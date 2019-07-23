@@ -222,7 +222,7 @@ public class FXMLproblemasController implements Initializable {
     
     public void LoadProblemasTable(String filter) {
         try{
-            ResultSet rs = this.d.getProblemasPEC(filter);
+            ResultSet rs = this.d.getRS("*","problemaspec",filter,"");
             while(rs.next()){
                 EntPEC p = new EntPEC();
                 p.setPeriodo(rs.getString("Periodo"));

@@ -2,20 +2,14 @@ package alumnos;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import alumnos.model.Alumno;
-import alumnos.model.Pregunta;
 import alumnos.model.TaskEntrega;
 import alumnos.model.TaskExtract;
 import alumnos.model.TaskImport;
@@ -246,29 +240,21 @@ public class FXMLalumnosController implements Initializable {
     
     @FXML
     void mnuEstructuraPEC(ActionEvent event) {
-	    List<String> lines = Collections.emptyList();
-	    File txt = new File(new File(this.home,"Desktop"),"2019.07_PEC2_ST1_sol.txt");
-	    try { 
-	    	lines = Files.readAllLines(Paths.get(txt.getAbsolutePath()),StandardCharsets.UTF_8); 
-	    } catch (Exception e) { 
-	    	e.printStackTrace(); 
-	    } 
-	    Iterator<String> itr = lines.iterator();
-	    boolean first = true;
-	    while (itr.hasNext()) { 
-	    	if (!first) {
-	    		Pregunta p = new Pregunta();
-	    		String[] tokens = itr.next().split(",");
-	    		p.setPregunta(tokens[1].replace("'","").replace("P",""));
-	    		p.setTipo(Integer.parseInt(tokens[2]));
-	    		p.setW(Float.parseFloat(tokens[4]));
-	    		if (!tokens[5].equals("null")) p.setNumopc(Integer.parseInt(tokens[5]));
-	    		System.out.println(String.join("; ", tokens));
-	    	} else {
-	    		itr.next();
-	    		first = false;
-	    	}
-	    } 
+        try {
+            FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLestructura.fxml"));
+            Parent r = (Parent) fxml.load();
+            FXMLestructuraController estruc = fxml.<FXMLestructuraController>getController();
+            estruc.SetData(this.d);
+            
+            Stage stage = new Stage(); 
+            stage.initModality(Modality.APPLICATION_MODAL); 
+            stage.setScene(new Scene(r));
+            stage.setTitle("Estructura PEC");
+            stage.showAndWait();
+        } catch(Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -423,7 +409,7 @@ public class FXMLalumnosController implements Initializable {
     public void LoadAlumnosTable(String filter) {
         int count = 0;        
         try{
-            ResultSet rs = this.d.getAlumnosRs(filter);
+            ResultSet rs = this.d.getRS("*","nota_fin",filter,"");
             while(rs.next()){
                 Alumno a = new Alumno();
                 a.setPeriodo(rs.getString("Periodo"));
