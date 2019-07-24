@@ -135,4 +135,35 @@ public class getAlumnosData {
             alert.showAndWait();
         }
     }
+    
+    public void preguntaPEC(Pregunta p) {
+        try {
+        	String sql = "REPLACE INTO pec_estructura " + 
+        			"(Periodo, Curso, pregunta, tipo, rescor, w, numopc, accion, datos, extra)" +
+        			" VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement q;
+            q = conn.prepareStatement(sql);
+            q.setString(1, p.getPeriodo());
+            q.setString(2, p.getCurso());
+            q.setString(3, p.getPregunta());
+            q.setInt(4, p.getTipo());
+            q.setString(5, p.getRescor());
+            q.setFloat(6, p.getW());
+            
+            if (p.getNumopc()!=null && p.getNumopc()!=0) q.setInt(7, p.getNumopc());
+            else q.setNull(7, java.sql.Types.INTEGER);
+            
+            if (p.getAccion()!=0) q.setInt(8, p.getAccion());
+            else q.setNull(8, java.sql.Types.INTEGER);
+            
+            q.setString(9, p.getDatos());
+            q.setString(10, p.getExtra());
+            q.executeUpdate();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
 }

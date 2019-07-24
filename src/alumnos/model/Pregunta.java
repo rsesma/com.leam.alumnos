@@ -1,5 +1,7 @@
 package alumnos.model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Pregunta {
     private String periodo;
@@ -100,7 +102,20 @@ public class Pregunta {
         }
     }
 
-    public Pregunta() {
+    public Pregunta(ResultSet rs) throws SQLException {
+    	if (rs!=null) {
+	        setPeriodo(rs.getString("Periodo"));
+	        setCurso(rs.getString("Curso"));
+	        setPregunta(rs.getString("pregunta"));
+	        setTipo(rs.getInt("tipo"));
+	        setRescor(rs.getString("rescor"));
+	        setW(rs.getFloat("w"));
+	        setNumopc(rs.getInt("numopc"));
+	        setAccion(rs.getInt("accion"));
+	        setDatos(rs.getString("datos"));
+	        setExtra(rs.getString("extra"));
+    	}
+
     	this.setChanged(false);
     }
     
@@ -173,12 +188,13 @@ public class Pregunta {
 
 
 	public void setNumopc(Integer numopc) {
-		this.numopc = numopc;
+		if (numopc>0) this.numopc = numopc;
+		else this.numopc = null;
 	}
 
 
 	public int getAccion() {
-		return accion;
+		return this.accion;
 	}
 
 

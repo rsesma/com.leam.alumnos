@@ -70,6 +70,7 @@ public class FXMLestructuraController implements Initializable {
     private static final String ATENCION = "Atención";
     private static final String ERROR = "Error";
     private static final String INDICAR_PERIODO_CURSO = "Indicar periodo y curso";
+    private static final String PROCESO_FINALIZADO = "Proceso finalizado";
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -169,16 +170,21 @@ public class FXMLestructuraController implements Initializable {
 	    	    while (itr.hasNext()) { 
 		    		String[] tokens = itr.next().split(",");
 		    		
-		    		Pregunta p = new Pregunta();
-		    		p.setPeriodo(per);
-		    		p.setCurso(cur);
-		    		p.setPregunta(tokens[1].replace("'","").replace("P",""));
-		    		p.setTipo(Integer.parseInt(tokens[2]));
-		    		p.setW(Float.parseFloat(tokens[4]));
-		    		if (!tokens[5].equals("null")) p.setNumopc(Integer.parseInt(tokens[5]));
-		    		p.setChanged(true);
-		    		
-		    		this.data.add(p);
+		    		Pregunta p;
+					try {
+						p = new Pregunta(null);
+			    		p.setPeriodo(per);
+			    		p.setCurso(cur);
+			    		p.setPregunta(tokens[1].replace("'","").replace("P",""));
+			    		p.setTipo(Integer.parseInt(tokens[2]));
+			    		p.setW(Float.parseFloat(tokens[4]));
+			    		if (!tokens[5].equals("null")) p.setNumopc(Integer.parseInt(tokens[5]));
+			    		p.setChanged(true);
+			    		
+			    		this.data.add(p);
+					} catch (SQLException e) {
+						this.showAlert(Alert.AlertType.ERROR, ERROR, e.getMessage());
+					}
 	    	    } 
 	        }
     	} else {
@@ -207,10 +213,9 @@ public class FXMLestructuraController implements Initializable {
     @FXML
     void pbGrabar(ActionEvent event) {
         this.data.forEach((p) -> { 
-            if (p.isChanged()) {
-            	System.out.println(p.getPregunta());
-            }
+            if (p.isChanged()) this.d.preguntaPEC(p);
         });
+        showAlert(Alert.AlertType.INFORMATION,"",PROCESO_FINALIZADO);
     }
     
     
@@ -223,19 +228,7 @@ public class FXMLestructuraController implements Initializable {
         try{
             ResultSet rs = this.d.getRS("*", "pec_estructura", filter, "Periodo, Curso, pregunta");
             while(rs.next()){
-                Pregunta p = new Pregunta();
-                p.setPeriodo(rs.getString("Periodo"));
-                p.setCurso(rs.getString("Curso"));
-                p.setPregunta(rs.getString("pregunta"));
-                p.setTipo(rs.getInt("tipo"));
-                p.setRescor(rs.getString("rescor"));
-                p.setW(rs.getFloat("w"));
-                p.setNumopc(rs.getInt("numopc"));
-                p.setAccion(rs.getInt("accion"));
-                p.setDatos(rs.getString("datos"));
-                p.setExtra(rs.getString("extra"));
-                
-                this.data.add(p);
+                this.data.add(new Pregunta(rs));
             }
         } catch(SQLException e){
         	this.showAlert(Alert.AlertType.ERROR, ERROR, e.getMessage());
