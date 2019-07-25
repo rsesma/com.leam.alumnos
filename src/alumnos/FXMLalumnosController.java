@@ -103,7 +103,9 @@ public class FXMLalumnosController implements Initializable {
     private static final String ST1_PEC1_comprimidas = "/ST1/PEC1/comprimidas";
     private static final String ST1_PEC1_descomprimidas = "/ST1/PEC1/descomprimidas";
     private static final String ST1_PEC2_originales = "/ST1/PEC2/originales";
+    private static final String ST1_PEC2_sintaxis = "/ST1/PEC2/sintaxis";
     private static final String ST2_originales = "/ST2/originales";
+    private static final String ST2_sintaxis = "/ST2/sintaxis";
 
     private static final String ABRIR_ARCHIVO = "Abrir archivo de datos";
     private static final String IMPORTANDO_DATOS = "Importando datos...";
@@ -230,7 +232,7 @@ public class FXMLalumnosController implements Initializable {
 
     @FXML
     void mnuCorregir(ActionEvent event) {
-		String stata = "C:\\Program Files (x86)\\Stata15\\Stata-64.exe";
+/*		String stata = "C:\\Program Files (x86)\\Stata15\\Stata-64.exe";
 		String dofile = "C:\\Users\\tempo\\Desktop\\test.do";
 		File dir = new File("C:\\Users\\tempo\\Desktop");
 		String cmd = String.format("\"%s\" /e /q do \"%s\", nostop", stata, dofile);
@@ -246,7 +248,7 @@ public class FXMLalumnosController implements Initializable {
             System.out.println(e.toString());
             e.printStackTrace();
 		}
-
+*/
     }
 
     @FXML
@@ -275,7 +277,6 @@ public class FXMLalumnosController implements Initializable {
 
     @FXML
     void mnuEntregaPEC(ActionEvent event) {
-    	
     	if (checkCarpetaPeriodo(true)) {
     		Optional<String> tipo = getTipoPEC();
         	if (tipo.isPresent()){
@@ -377,7 +378,12 @@ public class FXMLalumnosController implements Initializable {
 
     @FXML
     void mnuSintaxis(ActionEvent event) {
-
+    	if (checkCarpetaPeriodo(true)) {
+    		Optional<String> tipo = getTipoPEC();
+        	if (tipo.isPresent()){
+        		System.out.println(this.periodo.getText() + " " + tipo.get());
+        	}
+    	}
     }
 
     @FXML
@@ -520,6 +526,18 @@ public class FXMLalumnosController implements Initializable {
     	return folder;
     }
 
+    public File getSintaxisFromTipo(Optional<String> tipo) {
+    	File folder = null;
+    	File def = new File(this.home,CORREGIRPECS);
+    	if (tipo.get().equals("ST1 - PEC2")) {
+    		folder = new File(def, ST1_PEC2_sintaxis);
+    	} else if (tipo.get().equals("ST2")) {
+    		folder = new File(def, ST2_sintaxis);
+    	}
+    	
+    	return folder;
+    }
+    
     public File getExtractFolderFromTipo(Optional<String> tipo) {
     	File folder = null;
     	File def = new File(this.home,CORREGIRPECS);
