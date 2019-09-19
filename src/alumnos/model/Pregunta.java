@@ -17,7 +17,7 @@ public class Pregunta {
     private boolean changed;
             
     public enum TipoPregunta {
-        LIBRE(1, "Libre"), CERRADA(2, "Cerrada"), NUM(3, "NumÃ©rica");
+        LIBRE(1, "Libre"), CERRADA(2, "Cerrada"), NUM(3, "Numérica");
     	
         private int code;
         private String descrip;
@@ -60,7 +60,7 @@ public class Pregunta {
     }
 
     public enum Accion {
-    	LEER(1, "Leer"), TEST(2, "Test"), DATOS(3, "Datos"), IGNORAR(4, "Ignorar");
+    	LEER(1, "Leer"), TEST(2, "Test"), DATOS(3, "Datos"), IGNORAR(4, "Ignorar"), GRAFICO(5, "Gráfico");
     	
         private int code;
         private String descrip;
@@ -143,6 +143,9 @@ public class Pregunta {
 		return pregunta;
 	}
 
+	public String getPreguntaAsMemo() {
+		return "M" + pregunta.substring(0,2) + "_01";
+	}
 
 	public void setPregunta(String pregunta) {
 		this.pregunta = pregunta;
@@ -150,6 +153,10 @@ public class Pregunta {
 
 	public int getTipo() {
 		return this.tipo;
+	}
+	
+	public TipoPregunta getTipoPregunta() {
+		return TipoPregunta.getByCode(this.tipo);
 	}
 	
 	public String getTipoAsDescrip() {
@@ -197,6 +204,9 @@ public class Pregunta {
 		return this.accion;
 	}
 
+	public Accion getAccionAsEnum() {
+		return Accion.getByCode(this.accion);
+	}
 
 	public void setAccion(int accion) {
 		this.accion = accion;

@@ -40,7 +40,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#mnuCorregirPEC1" text="Corregir PEC1" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#mnuEstructuraPEC" text="Estructura PEC" />
-                  <MenuItem mnemonicParsing="false" onAction="#mnuSintaxis" text="Obtener Sintaxis">
+                  <MenuItem mnemonicParsing="false" onAction="#mnuSintaxis" text="Obtener y Ejectuar Sintaxis">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>

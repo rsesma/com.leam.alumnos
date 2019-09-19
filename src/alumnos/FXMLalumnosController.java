@@ -10,9 +10,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import alumnos.model.Alumno;
+import alumnos.model.Pregunta;
 import alumnos.model.TaskEntrega;
 import alumnos.model.TaskExtract;
 import alumnos.model.TaskImport;
+import alumnos.model.TaskSintaxis;
 import alumnos.model.getAlumnosData;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -99,11 +101,13 @@ public class FXMLalumnosController implements Initializable {
     TextField periodo;
     
     final ObservableList<Alumno> data = FXCollections.observableArrayList();
-    private static final String CORREGIRPECS = "/CorregirPECs/";
+    private static final String CORREGIRPECS = "/CorregirPECs";
+    private static final String ST1 = "/ST1";
     private static final String ST1_PEC1_comprimidas = "/ST1/PEC1/comprimidas";
     private static final String ST1_PEC1_descomprimidas = "/ST1/PEC1/descomprimidas";
     private static final String ST1_PEC2_originales = "/ST1/PEC2/originales";
     private static final String ST1_PEC2_sintaxis = "/ST1/PEC2/sintaxis";
+    private static final String ST2 = "/ST2";
     private static final String ST2_originales = "/ST2/originales";
     private static final String ST2_sintaxis = "/ST2/sintaxis";
 
@@ -120,6 +124,7 @@ public class FXMLalumnosController implements Initializable {
     private static final String REVISANDO_ENTREGA = "Revisando entrega...";
     private static final String ENCONTRARON_PROBLEMAS = "Se encontraron problemas:";
     private static final String EXTRAYENDO_PECS = "Extrayendo PECs...";
+    private static final String EXTRAYENDO_SINTAXIS = "Extrayendo sintaxis...";
     
     private final File home = new File(System.getProperty("user.home"));
     
@@ -381,7 +386,47 @@ public class FXMLalumnosController implements Initializable {
     	if (checkCarpetaPeriodo(true)) {
     		Optional<String> tipo = getTipoPEC();
         	if (tipo.isPresent()){
-        		System.out.println(this.periodo.getText() + " " + tipo.get());
+        		ArrayList<Pregunta> p = new ArrayList<Pregunta>();
+                try{
+                    ResultSet rs = this.d.getRS("*", "pec_estructura", 
+                    		"Periodo = '" + this.periodo.getText().trim() +
+                			"' AND Curso = '" + (tipo.get().equals("ST1 - PEC2") ? "ST1" : 
+                								(tipo.get().equals("ST2") ? "ST2" : "")) + "'"
+                			, "Periodo, Curso, pregunta");
+                    while(rs.next()){
+                        p.add(new Pregunta(rs));
+                    }
+                                        
+            		TaskSintaxis sintTask = new TaskSintaxis(p, getFolderFromTipo(tipo,false), 
+            				getSintaxisFromTipo(tipo), getCDFolderFromTipo(tipo));
+            		
+    	            this.pb.progressProperty().unbind();
+    	            this.pb.progressProperty().bind(sintTask.progressProperty());
+    	            this.pb.setVisible(true);
+    	            this.pbLabel.setVisible(true);
+    	            this.pbLabel.setText(EXTRAYENDO_SINTAXIS);
+
+    	            // When completed tasks
+    	            sintTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, //
+    	            		new EventHandler<WorkerStateEvent>() { 
+    	            	@Override
+                        public void handle(WorkerStateEvent t) {
+    	    	        	pb.setVisible(false);
+    	    	            pbLabel.setVisible(false);
+    	    	            pbLabel.setText("");
+    	    	            
+    	    	            Alert alert = new Alert(AlertType.INFORMATION);
+    	                    alert.setHeaderText(PROCESO_FINALIZADO);
+    	                    alert.setContentText(null);
+    		                alert.showAndWait();
+    	            	}
+    	            });
+    	            
+    	            new Thread(sintTask).start();
+                } catch(SQLException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                    alert.showAndWait();
+                }
         	}
     	}
     }
@@ -513,7 +558,7 @@ public class FXMLalumnosController implements Initializable {
     
     public File getFolderFromTipo(Optional<String> tipo, boolean entrega) {
     	File folder = null;
-    	File def = new File(this.home,CORREGIRPECS);
+    	File def = new File(this.folder.getText());
     	if (tipo.get().equals("ST1 - PEC1")) {
     		if (entrega) folder = new File(def, ST1_PEC1_descomprimidas);
     		else folder = new File(def, ST1_PEC1_comprimidas);
@@ -528,7 +573,7 @@ public class FXMLalumnosController implements Initializable {
 
     public File getSintaxisFromTipo(Optional<String> tipo) {
     	File folder = null;
-    	File def = new File(this.home,CORREGIRPECS);
+    	File def = new File(this.folder.getText());
     	if (tipo.get().equals("ST1 - PEC2")) {
     		folder = new File(def, ST1_PEC2_sintaxis);
     	} else if (tipo.get().equals("ST2")) {
@@ -540,7 +585,7 @@ public class FXMLalumnosController implements Initializable {
     
     public File getExtractFolderFromTipo(Optional<String> tipo) {
     	File folder = null;
-    	File def = new File(this.home,CORREGIRPECS);
+    	File def = new File(this.folder.getText());
     	if (tipo.get().equals("ST1 - PEC1")) {
     		folder = new File(def, ST1_PEC1_descomprimidas);
     	}
@@ -548,6 +593,18 @@ public class FXMLalumnosController implements Initializable {
     	return folder;
     }
 
+    public File getCDFolderFromTipo(Optional<String> tipo) {
+    	File folder = null;
+    	File def = new File(this.folder.getText());
+    	if (tipo.get().equals("ST1 - PEC2")) {
+    		folder = new File(def,ST1);
+    	} else if (tipo.get().equals("ST2")) {
+    		folder = new File(def, ST2);
+    	}
+    	
+    	return folder;
+    }
+    
     @FXML
     private void closeWindow() {
         Stage stage = (Stage) this.search.getScene().getWindow();

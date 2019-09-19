@@ -19,7 +19,7 @@ public class getAlumnosData {
     public getAlumnosData(Boolean load) {
     	getAlumnosData.setConn(null);
     	
-    	if (load) getConnection("rsesma","Amsesr.1977","192.168.1.10");
+    	if (load) getConnection("rsesma","Amsesr.1977","localhost");
     }
     
     public Boolean getConnection(String user, String pswd, String server) {
