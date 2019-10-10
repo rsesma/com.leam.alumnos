@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.input.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="645.0" prefWidth="928.0" stylesheets="@Alumnos.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alumnos.FXMLcorregirController">
+   <children>
+      <TableView fx:id="table" layoutY="-1.0" prefHeight="601.0" prefWidth="985.0" stylesheets="@Alumnos.css">
+        <columns>
+            <TableColumn fx:id="periodoCol" editable="false" prefWidth="65.0" sortable="false" text="Periodo" />
+            <TableColumn fx:id="cursoCol" editable="false" prefWidth="46.0" sortable="false" text="Curso" />
+            <TableColumn fx:id="grupoCol" editable="false" prefWidth="66.0" sortable="false" text="Grupo" />
+            <TableColumn fx:id="DNICol" editable="false" prefWidth="94.0" sortable="false" text="DNI" />
+            <TableColumn fx:id="PCCol" editable="true" prefWidth="32.0" sortable="false" text="PC" />
+            <TableColumn fx:id="fijoCol" editable="true" prefWidth="38.0" sortable="false" text="Fijo" />
+            <TableColumn fx:id="nameCol" editable="false" prefWidth="226.0" sortable="false" text="Nombre" />
+            <TableColumn fx:id="claseCol" editable="true" prefWidth="110.0" sortable="false" text="Clase" />
+            <TableColumn fx:id="entregaPEC1Col" editable="false" prefWidth="25.0" />
+            <TableColumn fx:id="pec1Col" editable="false" prefWidth="50.0" sortable="false" styleClass="notaPEC" text="PEC1" />
+            <TableColumn fx:id="entregaPECCol" editable="false" prefWidth="25.0" />
+            <TableColumn fx:id="pecCol" editable="false" prefWidth="50.0" sortable="false" styleClass="notaPEC" text="PEC" />
+            <TableColumn fx:id="notaCol" editable="false" prefWidth="55.0" sortable="false" styleClass="notaFin" text="NOTA" />
+            <TableColumn fx:id="copiaCol" editable="false" prefWidth="42.0" sortable="false" text="Copia" />
+            <TableColumn fx:id="idCopiaCol" editable="false" prefWidth="35.0" sortable="false" text="ID" />
+        </columns>
+      </TableView>
+      <TextField fx:id="search" layoutX="3.0" layoutY="607.0" prefHeight="27.0" prefWidth="299.0" promptText="Buscar" />
+      <Button fx:id="btSearch" defaultButton="true" layoutX="311.0" layoutY="608.0" mnemonicParsing="false" onAction="#pbSearch" prefHeight="25.0" prefWidth="52.0" text="Buscar" textAlignment="CENTER"> </Button>
+      <Label fx:id="ntotal" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="825.0" layoutY="612.0" prefHeight="17.0" prefWidth="148.0" text="Label" textAlignment="RIGHT" />
+      <MenuButton layoutX="369.0" layoutY="608.0" mnemonicParsing="false" text="Operativa">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#mnuAbrir" text="Abrir PEC">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+          <MenuItem mnemonicParsing="false" onAction="#mnuCorregir" text="Corregir PEC">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#mnuAbrirPEC1" text="Abrir PEC1">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#mnuCorregirPEC1" text="Corregir PEC1">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+        </items>
+      </MenuButton>
+   </children>
+</AnchorPane>

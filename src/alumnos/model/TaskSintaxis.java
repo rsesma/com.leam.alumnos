@@ -23,7 +23,7 @@ public class TaskSintaxis extends Task<Void> {
 	private final File sint;
 	private final File cd;
 
-	private static final String STATA_EXEC = "C:\\Program Files\\Stata16\\StataSE-64.exe";
+	private static final String STATA_EXEC = "C:\\Program Files\\Stata16\\StataIC-64.exe";
 	
 	public TaskSintaxis(ArrayList<Pregunta> p, File orig, File sint, File cd) {
         this.p = p;

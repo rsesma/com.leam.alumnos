@@ -18,6 +18,8 @@ public class Alumno {
     private Boolean changed;
     private Boolean copia;
     private String idcopia;
+    private Boolean entregaPEC1;
+    private Boolean entregaPEC;
     
     public Alumno() {
         this.changed = false;
@@ -150,4 +152,20 @@ public class Alumno {
     public String getIDCopia() {
         return this.idcopia;
     }
+
+	public Boolean getEntregaPEC1() {
+		return this.entregaPEC1;
+	}
+
+	public void setEntregaPEC1(Boolean l) {
+		this.entregaPEC1 = l;
+	}
+	
+	public Boolean getEntregaPEC() {
+		return this.entregaPEC;
+	}
+
+	public void setEntregaPEC(Boolean l) {
+		this.entregaPEC = l;
+	}
 }

@@ -237,23 +237,27 @@ public class FXMLalumnosController implements Initializable {
 
     @FXML
     void mnuCorregir(ActionEvent event) {
-/*		String stata = "C:\\Program Files (x86)\\Stata15\\Stata-64.exe";
-		String dofile = "C:\\Users\\tempo\\Desktop\\test.do";
-		File dir = new File("C:\\Users\\tempo\\Desktop");
-		String cmd = String.format("\"%s\" /e /q do \"%s\", nostop", stata, dofile);
-		// System.out.println(cmd);
-		
-		try {
-			Runtime rt = Runtime.getRuntime();
-			Process pr = rt.exec(cmd,null,dir);
-			pr.waitFor();
-			// System.out.println("Exited with error code " + exitCode);
-			// assert exitCode == 0;
-		} catch(Exception e) {
-            System.out.println(e.toString());
-            e.printStackTrace();
-		}
-*/
+    	if (checkCarpetaPeriodo(true)) {
+    		Optional<String> tipo = getTipoPEC();
+        	if (tipo.isPresent()){
+		        try {
+		            FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLcorregir.fxml"));
+		            Parent r = (Parent) fxml.load();
+		            FXMLcorregirController corr = fxml.<FXMLcorregirController>getController();
+		            corr.SetData(this.d, this.periodo.getText(), 
+		    				tipo.get(), getCDFolderFromTipo(tipo));
+		            
+		            Stage stage = new Stage(); 
+		            stage.initModality(Modality.APPLICATION_MODAL); 
+		            stage.setScene(new Scene(r));
+		            stage.setTitle("Corregir");
+		            stage.showAndWait();
+		        } catch(Exception e) {
+		            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+		            alert.showAndWait();
+		        }
+        	}
+    	}
     }
 
     @FXML
@@ -263,7 +267,7 @@ public class FXMLalumnosController implements Initializable {
     
     @FXML
     void mnuEstructuraPEC(ActionEvent event) {
-        try {
+    	try {
             FXMLLoader fxml = new FXMLLoader(getClass().getResource("/fxml/FXMLestructura.fxml"));
             Parent r = (Parent) fxml.load();
             FXMLestructuraController estruc = fxml.<FXMLestructuraController>getController();
