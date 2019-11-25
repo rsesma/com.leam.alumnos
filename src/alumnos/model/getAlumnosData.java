@@ -7,9 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-
 import javafx.scene.control.Alert;
 
 public class getAlumnosData {
@@ -55,35 +52,29 @@ public class getAlumnosData {
     	return conn.prepareStatement(sql).executeQuery();
     }
     
-    public void importExcelRow(org.apache.poi.ss.usermodel.Row row, String periodo) {
+    public void importExcelRow(org.apache.poi.ss.usermodel.Row row) {
         try {
-        	Cell c = row.getCell(5);		// check PC value to discard rows with no PC
-        	
-        	if (c == null || c.getCellType() == CellType.BLANK) {
-        		// do nothing: cell is void
-        	} else {
-	            PreparedStatement q;
-	            q = conn.prepareStatement("INSERT INTO alumnos " +
-	            						  "(Periodo,Curso,DNI,Grupo,nombre,ape1,ape2,PC,Fijo," +
-	            						  "CLASE,Comentario,provincia,poblacion,trabajo,email) " +
-	                                      "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-	            q.setString(1,periodo);														// Periodo
-	            q.setString(2,row.getCell(0).getStringCellValue().substring(0,3));			// Curso
-	            q.setString(3,row.getCell(1).getStringCellValue());							// DNI
-	            q.setString(4,row.getCell(0).getStringCellValue());							// Grupo
-	            q.setString(5,row.getCell(2).getStringCellValue());							// nombre
-	            q.setString(6,row.getCell(3).getStringCellValue());							// ape1
-	            q.setString(7,row.getCell(4).getStringCellValue());							// ape2
-	            q.setInt(8, (int) row.getCell(5).getNumericCellValue());					// PC
-	            q.setBoolean(9,row.getCell(6).getStringCellValue().equalsIgnoreCase("Si"));	// Fijo
-	            q.setInt(10, (int) row.getCell(7).getNumericCellValue());					// CLASE
-	            q.setString(11,row.getCell(8).getStringCellValue());						// Comentario
-	            q.setString(12,row.getCell(9).getStringCellValue());						// provincia
-	            q.setString(13,row.getCell(10).getStringCellValue());						// poblacion
-	            q.setString(14,row.getCell(11).getStringCellValue());						// trabajo
-	            q.setString(15,row.getCell(12).getStringCellValue());						// email
-	            q.executeUpdate();
-        	}
+            PreparedStatement q;
+            q = conn.prepareStatement("INSERT INTO alumnos " +
+            						  "(Periodo,Curso,DNI,Grupo,nombre,ape1,ape2,PC,Fijo," +
+            						  "CLASE,Comentario,provincia,poblacion,trabajo,email) " +
+                                      "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            q.setString(1,row.getCell(0).getStringCellValue());							// Periodo
+            q.setString(2,row.getCell(1).getStringCellValue());							// Curso
+            q.setString(3,row.getCell(2).getStringCellValue());							// DNI
+            q.setString(4,row.getCell(3).getStringCellValue());							// Grupo
+            q.setString(5,row.getCell(4).getStringCellValue());							// nombre
+            q.setString(6,row.getCell(5).getStringCellValue());							// ape1
+            q.setString(7,row.getCell(6).getStringCellValue());							// ape2
+            q.setInt(8, (int) row.getCell(7).getNumericCellValue());					// PC
+            q.setBoolean(9,row.getCell(8).getNumericCellValue()==1);					// Fijo
+            q.setInt(10, (int) row.getCell(9).getNumericCellValue());					// CLASE
+            q.setString(11,row.getCell(10).getStringCellValue());						// Comentario
+            q.setString(12,row.getCell(11).getStringCellValue());						// provincia
+            q.setString(13,row.getCell(12).getStringCellValue());						// poblacion
+            q.setString(14,row.getCell(13).getStringCellValue());						// trabajo
+            q.setString(15,row.getCell(14).getStringCellValue());						// email
+            q.executeUpdate();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.showAndWait();

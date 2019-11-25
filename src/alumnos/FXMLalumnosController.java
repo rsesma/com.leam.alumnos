@@ -114,7 +114,7 @@ public class FXMLalumnosController implements Initializable {
     private static final String ABRIR_ARCHIVO = "Abrir archivo de datos";
     private static final String IMPORTANDO_DATOS = "Importando datos...";
     private static final String PROCESO_FINALIZADO = "Proceso finalizado";
-    private static final String IMPORTACION_FINALIZADA = "Importaciï¿½n finalizada.\nï¿½Visualizar el periodo?";
+    private static final String IMPORTACION_FINALIZADA = "Importación finalizada.\n¿Visualizar el periodo?";
     private static final String ENTREGA_PECS = "Entrega PECs";
     private static final String INDIQUE_CARPETA = "Indique una carpeta CorregirPECs";
     private static final String CARPETA_NO_EXISTE = "La carpeta CorregirPECs indicada no existe";
@@ -196,42 +196,40 @@ public class FXMLalumnosController implements Initializable {
         chooser.setTitle(ABRIR_ARCHIVO);
         chooser.setInitialDirectory(new File(System.getProperty("user.home"))); 
         File file = chooser.showOpenDialog(null);
+        String p = this.periodo.getText();
         if (file != null) {
-        	String p = this.periodo.getText(); 
-            if (!p.isEmpty()){
-	        	this.pb.setVisible(true);
-	            this.pb.setProgress(0);
-	            this.pbLabel.setVisible(true);
-	            this.pbLabel.setText(IMPORTANDO_DATOS);
-	        	
-	            TaskImport importTask = new TaskImport(this.d, this.periodo.getText(), file.getAbsolutePath());
-	            this.pb.progressProperty().unbind();
-	            this.pb.progressProperty().bind(importTask.progressProperty());
-	            
-	            // When completed tasks
-	            importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, //
-	            		new EventHandler<WorkerStateEvent>() { 
-	            	@Override
-                    public void handle(WorkerStateEvent t) {
-	    	        	pb.setVisible(false);
-	    	            pbLabel.setVisible(false);
-	    	            pbLabel.setText("");
-	            		
-	                    String filter = "";
-	                    Alert alert = new Alert(AlertType.CONFIRMATION);
-	                    alert.setTitle(PROCESO_FINALIZADO);
-	                    alert.setHeaderText(null);
-	                    alert.setContentText(IMPORTACION_FINALIZADA);
-	                    Optional<ButtonType> result = alert.showAndWait();
-	                    if (result.get() == ButtonType.OK) filter = "Periodo = '" + p + "'";
-	                    
-	                    data.removeAll(data);
-	                    LoadAlumnosTable(filter);
-	            	}
-	            });
-	            
-	            new Thread(importTask).start();
-            }
+        	this.pb.setVisible(true);
+            this.pb.setProgress(0);
+            this.pbLabel.setVisible(true);
+            this.pbLabel.setText(IMPORTANDO_DATOS);
+        	
+            TaskImport importTask = new TaskImport(this.d, file.getAbsolutePath());
+            this.pb.progressProperty().unbind();
+            this.pb.progressProperty().bind(importTask.progressProperty());
+            
+            // When completed tasks
+            importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, //
+            		new EventHandler<WorkerStateEvent>() { 
+            	@Override
+                public void handle(WorkerStateEvent t) {
+    	        	pb.setVisible(false);
+    	            pbLabel.setVisible(false);
+    	            pbLabel.setText("");
+            		
+                    String filter = "";
+                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle(PROCESO_FINALIZADO);
+                    alert.setHeaderText(null);
+                    alert.setContentText(IMPORTACION_FINALIZADA);
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) filter = "Periodo = '" + p + "'";
+                    
+                    data.removeAll(data);
+                    LoadAlumnosTable(filter);
+            	}
+            });
+            
+            new Thread(importTask).start();
         }
     }
 

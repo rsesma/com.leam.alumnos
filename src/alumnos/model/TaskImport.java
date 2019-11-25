@@ -10,12 +10,10 @@ import javafx.scene.control.Alert;
 
 public class TaskImport extends Task<Integer> {
 	private final getAlumnosData d;
-	private final String periodo;
 	private final String file;
 
-    public TaskImport(getAlumnosData d, String periodo, String file) {
+    public TaskImport(getAlumnosData d, String file) {
         this.d = d;
-        this.periodo = periodo;
         this.file = file;
     }
     
@@ -28,9 +26,8 @@ public class TaskImport extends Task<Integer> {
             XSSFSheet sheet = wb.getSheetAt(0);
             int total = sheet.getLastRowNum();
             for (iter = 1; iter < total; iter++) {
-                this.d.importExcelRow(sheet.getRow(iter), this.periodo);
+                this.d.importExcelRow(sheet.getRow(iter));
                 
-                updateMessage("Iteración " + iter);
                 updateProgress(iter,total);
             }
             wb.close();
